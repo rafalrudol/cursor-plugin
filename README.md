@@ -4,7 +4,11 @@ A Cursor plugin that connects your AI assistant to PagerDuty's remote MCP server
 
 ## Overview
 
-This plugin connects Cursor to PagerDuty's remote MCP server at `mcp.pagerduty.com/mcp`, enabling incident management, on-call lookups, service management, and more directly from your IDE.
+This plugin connects Cursor to PagerDuty's remote MCP server, enabling incident management, on-call lookups, service management, and more directly from your IDE.
+
+The default endpoint is `https://mcp.pagerduty.com/mcp` (US). EU service-region accounts set the **PagerDuty MCP URL** plugin variable to `https://mcp.eu.pagerduty.com/mcp`. The API token stays in the **PagerDuty API Token** variable. Cursor substitutes both when it starts the server and does not rewrite `mcp.json`. Do not paste the token into that file.
+
+PagerDuty does not support Dynamic Client Registration. The EU URL does not make the OAuth Sign in button able to register a Cursor client. Use the API token.
 
 ## Installation
 

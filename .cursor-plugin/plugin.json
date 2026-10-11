@@ -1,7 +1,7 @@
 {
   "name": "pagerduty",
   "displayName": "PagerDuty",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "PagerDuty MCP server for Cursor - manage incidents, services, schedules, on-call, and more directly from your IDE.",
   "author": {
     "name": "PagerDuty",
@@ -23,6 +23,16 @@
         "title": "PagerDuty API Token",
         "description": "User API token from https://support.pagerduty.com/main/docs/pagerduty-mcp-server-integration-guide#generate-your-pagerduty-api-token. Only the token value is needed; the Authorization header already includes the `Token ` prefix.",
         "writeOnly": true
+      },
+      "PAGERDUTY_MCP_URL": {
+        "type": "string",
+        "title": "PagerDuty MCP URL",
+        "description": "Hosted MCP endpoint. US accounts keep the default. EU service-region accounts must use https://mcp.eu.pagerduty.com/mcp. An EU API token is rejected by the US host. This setting does not enable OAuth Dynamic Client Registration; PagerDuty does not support it.",
+        "default": "https://mcp.pagerduty.com/mcp",
+        "enum": [
+          "https://mcp.pagerduty.com/mcp",
+          "https://mcp.eu.pagerduty.com/mcp"
+        ]
       }
     },
     "required": ["PAGERDUTY_API_TOKEN"]

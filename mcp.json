@@ -4,6 +4,6 @@
       "Authorization": "Token ${PAGERDUTY_API_TOKEN}"
     },
     "type": "streamable-http",
-    "url": "https://mcp.pagerduty.com/mcp"
+    "url": "${PAGERDUTY_MCP_URL:-https://mcp.pagerduty.com/mcp}"
   }
 }

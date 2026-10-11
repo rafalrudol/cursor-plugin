@@ -1,58 +1,37 @@
 ---
 name: pagerduty-mcp-setup
-description: REQUIRED setup for how to use the PagerDuty MCP server. IMPORTANT If you want to use PagerDuty MCP tools, read these instructions BEFORE checking tool schemas or doing any PagerDuty investigation because the MCP may not work until the API token is configured.
+description: REQUIRED setup for how to use the PagerDuty MCP server. Read this before calling PagerDuty tools. The API token and, for EU accounts, the MCP URL are plugin variables. Do not edit mcp.json.
 ---
 
-IMPORTANT: Before using the PagerDuty MCP or doing any other investigation related to PagerDuty, you must follow these directions and make sure that the following requirements are met.
+The PagerDuty plugin talks to the hosted MCP server. Cursor substitutes plugin variables into `mcp.json` when it starts the server. It does not rewrite that file.
 
-### Context
+`mcp.json` keeps these placeholders after the plugin is configured:
 
-The configuration for the MCP of the PagerDuty Plugin lives in the following directory relative to the path to this SKILL.md file: `../../mcp.json`
+- `Authorization` is `Token ${PAGERDUTY_API_TOKEN}`
+- `url` is `${PAGERDUTY_MCP_URL:-https://mcp.pagerduty.com/mcp}`
 
-In a non-configured state, the Authorization header contains the placeholder `Token ${PAGERDUTY_API_TOKEN}`.
+Seeing `${PAGERDUTY_API_TOKEN}` in the file does not mean the token is missing. Do not paste a token into `mcp.json`. Plugin updates restore that file, and the token belongs in the plugin variable.
 
-IMPORTANT: Before using the PagerDuty MCP you MUST ensure that this placeholder has been replaced with a real PagerDuty User API token.
+### Configure
 
-The PagerDuty-hosted MCP service expects the header to look like this:
+In Cursor, open the PagerDuty plugin settings (Customize, or Dashboard → Plugins → Configure):
 
-```json
-{
-  "Authorization": "Token your-pagerduty-api-token-here"
-}
-```
+1. Set **PagerDuty API Token** to the user API token. Enter only the token. The header already includes the `Token ` prefix. Do not ask the user to send you the token. Instructions: `https://support.pagerduty.com/main/docs/pagerduty-mcp-server-integration-guide#generate-your-pagerduty-api-token`
+2. Leave **PagerDuty MCP URL** at the US default `https://mcp.pagerduty.com/mcp` unless the account is in the EU service region. EU accounts must use `https://mcp.eu.pagerduty.com/mcp`. An EU token is rejected by the US host.
+3. Reload the window after changing either value. On macOS the command is `Reload Window` from the Command Palette (`⌘⇧P`). On Windows and Linux use `Ctrl+Shift+P`.
 
-If this has not been customized for the user, you should not do anything except tell the user that the PagerDuty MCP is not configured yet and help them finish setup.
+This plugin does not turn on OAuth Dynamic Client Registration. PagerDuty does not support DCR. The Sign in button can fail before an account form appears. Use the API token variable instead.
 
-Do not continue investigating PagerDuty or checking PagerDuty MCP tool schemas until the token is configured.
+### Check that it works
 
-### Steps
+Do not decide configuration by reading `mcp.json`. Make one read-only call, for example `browse_incidents` with action `list` and limit 1, or `browse_services` with action `list` and limit 1.
 
-Before continuing, take the following steps:
-
-1. Read the `mcp.json` file in the plugin directory. This is in the grandparent directory relative to this SKILL.md file (`../../mcp.json`).
-2. If the file still contains `Token ${PAGERDUTY_API_TOKEN}` or `${PAGERDUTY_API_TOKEN}`, stop immediately. Tell the user the PagerDuty MCP is not configured yet.
-3. In that message, do all of the following:
-   - Cite `mcp.json` and specifically point to the `headers.Authorization` lines in that file so the user knows exactly what to edit.
-   - Include a JSON code block with the current `mcp.json` config so they can copy it directly.
-   - Tell them to replace `${PAGERDUTY_API_TOKEN}` with their PagerDuty User API token, keeping the `Token ` prefix in the Authorization header.
-   - Tell them they can follow PagerDuty's API token instructions here: `https://support.pagerduty.com/main/docs/pagerduty-mcp-server-integration-guide#generate-your-pagerduty-api-token`
-   - Do not ask them to send you the token.
-   - Do not inspect PagerDuty MCP tools or continue the PagerDuty task yet.
-4. Once the token has been added to `mcp.json`, tell the user to refresh Cursor by opening the Command Palette (`⌘⇧P` on Mac or `Ctrl+Shift+P` on Windows/Linux) and running `Reload Window`. Use the current operating system to decide what keybinding to show.
-5. Continue on to using the PagerDuty MCP.
+- A normal tool result means the plugin is configured.
+- HTTP 401, or an authentication error, means the token is missing or the MCP URL does not match the account region.
+- A 403 that names a product the account does not have (for example incident workflows) is not an authentication failure. Try another read-only tool.
 
 ### Reference
 
-- PagerDuty API token setup instructions: `https://support.pagerduty.com/main/docs/pagerduty-mcp-server-integration-guide#generate-your-pagerduty-api-token`
-- PagerDuty hosted MCP setup guide: `https://support.pagerduty.com/main/docs/pagerduty-mcp-server-integration-guide`
-- PagerDuty developer docs: `https://developer.pagerduty.com/docs/mcp-tooling-remote-server`
-
-### Example code block to show the user
-
-When prompting the user to configure the token, include a reference to the header section like so:
-
-```3:5:mcp.json
-    "headers": {
-      "Authorization": "Token ${PAGERDUTY_API_TOKEN}"
-    },
-```
+- EU hosted MCP: `https://support.pagerduty.com/main/docs/pagerduty-mcp-server`
+- Token setup: `https://support.pagerduty.com/main/docs/pagerduty-mcp-server-integration-guide#generate-your-pagerduty-api-token`
+- Developer docs: `https://developer.pagerduty.com/docs/mcp-tooling-remote-server`
