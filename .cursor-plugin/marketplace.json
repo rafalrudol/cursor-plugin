@@ -1,0 +1,17 @@
+{
+  "name": "pagerduty",
+  "owner": {
+    "name": "PagerDuty",
+    "email": "dev-platform@pagerduty.com"
+  },
+  "metadata": {
+    "description": "PagerDuty plugin for Cursor."
+  },
+  "plugins": [
+    {
+      "name": "pagerduty",
+      "source": "./",
+      "description": "PagerDuty MCP server for Cursor - manage incidents, services, schedules, on-call, and more directly from your IDE."
+    }
+  ]
+}
